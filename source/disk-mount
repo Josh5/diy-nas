@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:26:12 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 10:24:09 am
+# Last Modified: Wednesday, 20th January 2021 9:33:29 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -83,8 +83,8 @@ do_mount()
     # Add it to the storage pool
     if ! `/usr/bin/grep "${STORAGE_POOL_PATH}" /proc/mounts &> /dev/null` ; then
         echo "Could not find mergerfs mount.. Lets create it!"
-        mkdir -p /storage/pool
-        mergerfs -o defaults,allow_other,direct_io,use_ino,minfreespace=1G,fsname=mergerfs '/mnt/disks/*' /storage/pool
+        mkdir -p ${STORAGE_POOL_PATH}
+        mergerfs -o defaults,allow_other,direct_io,use_ino,minfreespace=1G,fsname=mergerfs '/mnt/disks/*' ${STORAGE_POOL_PATH}
     fi
     xattr -w user.mergerfs.srcmounts "+>${MOUNT_POINT}" ${STORAGE_POOL_PATH}/.mergerfs
 }
@@ -110,7 +110,7 @@ do_checkmounts()
             # This directory is a mount...
 
             # Check that it is already in the pool
-            if ! `xattr -p user.mergerfs.srcmounts /storage/pool/.mergerfs | grep ${f} &> /dev/null` ; then
+            if ! `xattr -p user.mergerfs.srcmounts ${STORAGE_POOL_PATH}/.mergerfs | grep ${f} &> /dev/null` ; then
                 # Not already in the pool, time to add it I suppose...
                 xattr -w user.mergerfs.srcmounts "+>${f}" ${STORAGE_POOL_PATH}/.mergerfs
             fi

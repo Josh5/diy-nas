@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 9:15:00 pm
+# Last Modified: Wednesday, 20th January 2021 10:06:36 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -356,33 +356,49 @@ function install_fstab_config {
     echo "" >> /etc/fstab
 
     # Mount it now
-    _stage_header "Creating mount point '/storage'"
-    mkdir -p /storage &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
-    _stage_header "Mounting '/storage'"
-    mount /storage &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
+    if [[ ! -e /storage ]]; then
+        _stage_header "Creating mount point '/storage'"
+        mkdir -p /storage &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
+    if ! grep -qs ' /storage ' /proc/mounts; then
+        _stage_header "Mounting '/storage'"
+        mount /storage &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
 
-    _stage_header "Creating mount point '/mnt/disks'"
-    mkdir -p /mnt/disks &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
-    _stage_header "Mounting '/mnt/disks'"
-    mount /mnt/disks &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
+    if [[ ! -e /mnt/disks ]]; then
+        _stage_header "Creating mount point '/mnt/disks'"
+        mkdir -p /mnt/disks &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
+    if ! grep -qs ' /mnt/disks ' /proc/mounts; then
+        _stage_header "Mounting '/mnt/disks'"
+        mount /mnt/disks &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
 
-    _stage_header "Creating mount point '/mnt/disks/ramdisk'"
-    mkdir -p /mnt/disks/ramdisk &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
-    _stage_header "Mounting '/mnt/disks/ramdisk'"
-    mount /mnt/disks/ramdisk &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
+    if [[ ! -e /mnt/disks/ramdisk ]]; then
+        _stage_header "Creating mount point '/mnt/disks/ramdisk'"
+        mkdir -p /mnt/disks/ramdisk &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
+    if ! grep -qs ' /mnt/disks/ramdisk ' /proc/mounts; then
+        _stage_header "Mounting '/mnt/disks/ramdisk'"
+        mount /mnt/disks/ramdisk &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
 
-    _stage_header "Creating mount point '/storage/pool'"
-    mkdir -p /storage/pool &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
-    _stage_header "Mounting '/storage/pool'"
-    mount /storage/pool &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
+    if [[ ! -e /storage/pool ]]; then
+        _stage_header "Creating mount point '/storage/pool'"
+        mkdir -p /storage/pool &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
+    if ! grep -qs ' /storage/pool ' /proc/mounts; then
+        _stage_header "Mounting '/storage/pool'"
+        mount /storage/pool &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
     
     echo
 }
