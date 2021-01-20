@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 3:54:12 pm
+# Last Modified: Wednesday, 20th January 2021 3:56:36 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -609,7 +609,7 @@ function patching_muximux_for_landing_page {
 
         _standalone_stage_header "Attempting No.${patch_attempts} to install settings.ini.php"
         if [[ -e ${watch_for_file} ]]; then
-            _stage_header "Installing muximux settings file"]
+            _stage_header "Installing muximux settings file"
             install -m 666 ${PROJECT_PATH}/source/settings.ini.php ${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php &>> ${SCRIPT_LOG_FILE}
             _update_stage_header ${?}
 
