@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 10:44:20 pm
+# Last Modified: Wednesday, 20th January 2021 11:37:25 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -83,7 +83,8 @@ if [[ ! -L ${PROJECT_PATH} ]]; then
 
     # Pull latest changes
     git fetch origin
-    git checkout --track origin/master
+    git checkout master
+    git pull
 
     popd
 fi
