@@ -1,0 +1,8 @@
+# Ignore all files in the config directory
+config/**
+
+# Landing page
+system_appdata/landing-page/**
+# Note, the settings.ini.php file has been force included due to the muximux project .gitignore file
+
+# Do not ignore these files:

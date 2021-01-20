@@ -1,0 +1,37 @@
+###
+# File: udev.rules
+# Project: diy-nas
+# File Created: Wednesday, 20th January 2021 7:56:22 am
+# Author: Josh.5 (jsunnex@gmail.com)
+# -----
+# Last Modified: Wednesday, 20th January 2021 7:54:46 am
+# Modified By: Josh.5 (jsunnex@gmail.com)
+###
+
+# Only check for block devices, /dev/sd*, /dev/sr*, /dev/mmc*, and /dev/nvme*
+SUBSYSTEM!="block", KERNEL!="sd*|sr*|mmc*|nvme*", GOTO="run_modifications_check"
+
+# Check for special partitions we don't want mount
+IMPORT{builtin}="blkid"
+ENV{ID_FS_LABEL}=="EFI|BOOT|SYSTEM|Recovery|RECOVERY|SETTINGS|boot|root0|share0", GOTO="exit"
+ENV{ID_FS_TYPE}=="vfat", GOTO="exit"
+
+# /dev/sd*, /dev/mmc*, and /dev/nvme* with partitions/disk and filesystems only, and /dev/sr* disks only
+KERNEL=="sd*|mmc*|nvme*", ENV{DEVTYPE}=="partition|disk", ENV{ID_FS_USAGE}=="filesystem", GOTO="run_disk_mount"
+GOTO="exit"
+
+# mount or umount for hdds
+LABEL="run_disk_mount"
+ACTION=="add", PROGRAM="/usr/bin/sh -c '/usr/bin/grep -E ^/dev/%k\  /proc/mounts || true'", RESULT=="", RUN+="/bin/systemctl start disk-mount@%k.service"
+ACTION=="remove", RUN+="/bin/systemctl stop disk-mount@%k.service"
+GOTO="exit"
+
+# Check for modifications to current mounts
+LABEL="run_modifications_check"
+SUBSYSTEM!="bdi", GOTO="exit"
+ACTION=="add", RUN+="/usr/local/bin/disk-mount check"
+ACTION=="remove", RUN+="/usr/local/bin/disk-mount check"
+GOTO="exit"
+
+# Exit
+LABEL="exit"

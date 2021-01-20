@@ -1,0 +1,21 @@
+#!/bin/bash
+###
+# File: diy-nas-update
+# Project: source
+# File Created: Wednesday, 20th January 2021 9:00:06 am
+# Author: Josh.5 (jsunnex@gmail.com)
+# -----
+# Last Modified: Wednesday, 20th January 2021 3:30:21 pm
+# Modified By: Josh.5 (jsunnex@gmail.com)
+###
+
+# Add header
+echo >> /var/log/diy-nas-update.log
+echo "#############################################" >> /var/log/diy-nas-update.log
+echo >> /var/log/diy-nas-update.log
+echo "Running $(date)" >> /var/log/diy-nas-update.log
+echo >> /var/log/diy-nas-update.log
+
+wget -O - https://raw.githubusercontent.com/Josh5/diy-nas/master/install.sh | bash | tee -a /var/log/diy-nas-update.log
+echo >> /var/log/diy-nas-update.log
+

@@ -31,11 +31,21 @@ This disables auto-mounting devices that are plugged in. This setup will handle 
 This system has some configureation options that is read during the install/update processes.
 Be sure to create this file with any modifications that you may need...
 
-Create a file called `/opt/diy-nas/config.env`.
+Create a file called `/opt/diy-nas/config/config.env`.
 Populate it with the following options as required...
 
 
 ### Blacklist partitions by UUID
+
+You are able to blacklist partitions by adding an array of UUIDs.
+
+Add UUIDs to the `config.env` file as shown below:
+```
+DISK_UUID_BLACKLIST=(
+    "86b758ab-6d21-4e88-a769-6881c735857e"
+    "a6c87277-c8ad-4665-b9ad-3eae65c43bc2"
+)
+```
 
 
 ### Generate configuration for any cache disks (WIP)
@@ -51,7 +61,7 @@ blkid
 
 Fetch the UUID of the partitions of the cache disk
 
-Add the variables in the `config.env` file as shown below
+Add the variables in the `config.env` file as shown below:
 ```
 CACHE_DISK_PART1_UUID=90c53f7c-8834-db9a-adb7-f7676bad4e4c
 CACHE_DISK_PART2_UUID=837ab7b3-9222-48fd-8508-00b679517cab

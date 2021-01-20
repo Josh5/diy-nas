@@ -1,0 +1,17 @@
+###
+# File: exports
+# Project: source
+# File Created: Wednesday, 20th January 2021 8:52:33 am
+# Author: Josh.5 (jsunnex@gmail.com)
+# -----
+# Last Modified: Wednesday, 20th January 2021 8:52:43 am
+# Modified By: Josh.5 (jsunnex@gmail.com)
+###
+
+# /etc/exports
+
+# Usually I only use NFS in a read-only situation and this file is configured
+# based on that assumption (primarily KODI).
+# http://kodi.wiki/view/NFS
+
+/storage/pool       *(fsid=0,ro,sync,no_root_squash,no_subtree_check)

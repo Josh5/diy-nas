@@ -1,0 +1,140 @@
+#!/bin/bash
+###
+# File: disk-mount
+# Project: diy-nas
+# File Created: Wednesday, 20th January 2021 7:26:12 am
+# Author: Josh.5 (jsunnex@gmail.com)
+# -----
+# Last Modified: Wednesday, 20th January 2021 10:24:09 am
+# Modified By: Josh.5 (jsunnex@gmail.com)
+###
+
+ACTION=$1
+DEVBASE=$2
+DEVICE="/dev/${DEVBASE}"
+STORAGE_POOL_PATH=/storage/pool
+CONFIG_PATH=/opt/diy-nas/config/config.env
+
+# See if this drive is already mounted
+MOUNT_POINT=$(/bin/mount | /bin/grep ${DEVICE} | /usr/bin/awk '{ print $3 }')
+
+do_mount()
+{
+    if [[ -n ${MOUNT_POINT} ]]; then
+        # Already mounted, exit
+        echo "Ignoring due to device already mounted"
+        exit 1
+    fi
+
+
+    if [[ -e ${CONFIG_PATH} ]]; then
+        source ${CONFIG_PATH}
+    fi
+	
+    # Get info for this drive: $ID_FS_LABEL, $ID_FS_UUID, and $ID_FS_TYPE
+    # This replaces whitespace with underscore
+    BLKID_DATA="$(/sbin/blkid -o udev ${DEVICE})"
+    eval $(echo "${BLKID_DATA// /_}")
+
+    # Blacklist of lables...
+    if [[ "$ID_FS_LABEL_FATBOOT" =~ ^(EFI|BOOT)$ ]]; then
+        # Dont mount, exit
+        echo "Ignoring due to ID_FS_LABEL_FATBOOT"
+        exit 1
+    fi
+    if [[ "$ID_FS_LABEL" =~ ^(EFI|BOOT|SYSTEM|Recovery|RECOVERY|SETTINGS|boot|root0|share0)$ ]]; then
+        # Dont mount, exit
+        echo "Ignoring due to ID_FS_LABEL"
+        exit 1
+    fi
+    if [[ " ${DISK_UUID_BLACKLIST[@]} " =~ " ${ID_FS_UUID} " ]]; then
+        # Dont mount, exit
+        echo "Ignoring due to ID_FS_UUID in config.env file DISK_UUID_BLACKLIST list"
+        exit 1
+    fi
+
+    # Figure out a mount point to use
+    LABEL=${ID_FS_LABEL}
+    if [[ -z "${LABEL}" ]]; then
+        LABEL=${DEVBASE}
+    elif /bin/grep -q " /media/${LABEL} " /etc/mtab; then
+        # Already in use, make a unique one
+        LABEL+="-${DEVBASE}"
+    fi
+    LABEL=$(echo "${LABEL// /_}")
+    MOUNT_POINT="/mnt/disks/${LABEL}"
+
+    /bin/mkdir -p ${MOUNT_POINT}
+
+    # Global mount options
+    OPTS="rw,relatime"
+
+    # File system type specific mount options
+    if [[ ${ID_FS_TYPE} == "vfat" || ${ID_FS_TYPE} == "ntfs" ]]; then
+        OPTS+=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
+    fi
+
+    if ! /bin/mount -o ${OPTS} ${DEVICE} ${MOUNT_POINT}; then
+        # Error during mount process: cleanup mountpoint
+        /bin/rmdir ${MOUNT_POINT}
+        exit 1
+    fi
+
+    # Add it to the storage pool
+    if ! `/usr/bin/grep "${STORAGE_POOL_PATH}" /proc/mounts &> /dev/null` ; then
+        echo "Could not find mergerfs mount.. Lets create it!"
+        mkdir -p /storage/pool
+        mergerfs -o defaults,allow_other,direct_io,use_ino,minfreespace=1G,fsname=mergerfs '/mnt/disks/*' /storage/pool
+    fi
+    xattr -w user.mergerfs.srcmounts "+>${MOUNT_POINT}" ${STORAGE_POOL_PATH}/.mergerfs
+}
+
+do_checkmounts()
+{
+    # Delete all empty dirs in /mnt/disks that aren't being used as mount points. 
+    for f in /mnt/disks/* ; do
+            
+        if ! /bin/grep -q " $f " /etc/mtab; then
+            # This directory is not a mount...
+
+            # Remove all instances of it from the storage pool
+            if `/usr/bin/grep "mergerfs ${STORAGE_POOL_PATH}" /proc/mounts &> /dev/null` ; then
+                xattr -w user.mergerfs.srcmounts "-${f}" ${STORAGE_POOL_PATH}/.mergerfs
+            fi
+
+            # Remove the directory if it is empty
+            if [[ -n $(/usr/bin/find "$f" -maxdepth 0 -type d -empty) ]]; then
+                /bin/rmdir "$f"
+            fi
+        else
+            # This directory is a mount...
+
+            # Check that it is already in the pool
+            if ! `xattr -p user.mergerfs.srcmounts /storage/pool/.mergerfs | grep ${f} &> /dev/null` ; then
+                # Not already in the pool, time to add it I suppose...
+                xattr -w user.mergerfs.srcmounts "+>${f}" ${STORAGE_POOL_PATH}/.mergerfs
+            fi
+        fi
+    done
+}
+
+do_unmount()
+{
+    if [[ -n ${MOUNT_POINT} ]]; then
+        /bin/umount -l ${DEVICE}
+    fi
+
+    do_checkmounts
+}
+
+case "${ACTION}" in
+    add)
+        do_mount
+        ;;
+    remove)
+        do_unmount
+        ;;
+    check)
+        do_checkmounts
+        ;;
+esac
