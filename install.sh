@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 3:37:37 pm
+# Last Modified: Wednesday, 20th January 2021 3:54:12 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -575,16 +575,6 @@ function patching_muximux_for_landing_page {
     # Update default docker-compose services
     _header "Patching muximux for landing page"
 
-
-    _stage_header "Install muximux settings"
-    install -m 666 ${PROJECT_PATH}/source/settings.ini.php ${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
-
-    _stage_header "Patch muximux settings with hostname"
-    short_hostname=$(hostname -s)
-    sed -i "s|://localhost|://${short_hostname,,}.local|" ${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php &>> ${SCRIPT_LOG_FILE}
-    _update_stage_header ${?}
-
     file_to_patch="${PROJECT_PATH}/system_appdata/landing-page/www/muximux/muximux.php"
     patch_attempts=0
     patch_success=1
@@ -608,6 +598,39 @@ function patching_muximux_for_landing_page {
         [[ ${found_file} ]] && break
         sleep 1
     done
+
+    watch_for_file="${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php-example"
+    patch_attempts=0
+    patch_success=1
+    while [ ${patch_attempts} -le 5 ]; do
+        (( patch_attempts++ ))
+
+        found_file=0
+
+        _standalone_stage_header "Attempting No.${patch_attempts} to install settings.ini.php"
+        if [[ -e ${watch_for_file} ]]; then
+            _stage_header "Installing muximux settings file"]
+            install -m 666 ${PROJECT_PATH}/source/settings.ini.php ${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php &>> ${SCRIPT_LOG_FILE}
+            _update_stage_header ${?}
+
+            _stage_header "Updating muximux settings with hostname"
+            short_hostname=$(hostname -s)
+            sed -i "s|://localhost|://${short_hostname,,}.local|" ${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php &>> ${SCRIPT_LOG_FILE}
+            _update_stage_header ${?}
+        else
+            found_file=1
+        fi
+        
+        # Break if this was a success
+        [[ ${found_file} ]] && break
+        sleep 1
+    done
+
+    if [[ -e ${PROJECT_PATH}/system_appdata/landing-page ]]; then
+        _stage_header "Setting muximux project file's ownership to default user"
+        chown -R 1000:1000 ${PROJECT_PATH}/system_appdata/landing-page &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
 
     echo
 }
