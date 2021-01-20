@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 10:06:36 pm
+# Last Modified: Wednesday, 20th January 2021 10:44:20 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -473,8 +473,12 @@ function install_samba {
     install -m 644 ${PROJECT_PATH}/source/smb.conf /etc/samba/smb.conf
     _update_stage_header ${?}
 
+    _stage_header "Allow Samba in firewall rules"
+    ufw allow samba &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
     _stage_header "Restarting Samba server"
-    systemctl restart smbd &>> ${SCRIPT_LOG_FILE}
+    systemctl restart smbd.service nmbd.service &>> ${SCRIPT_LOG_FILE}
     _update_stage_header ${?}
 
     echo
