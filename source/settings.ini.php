@@ -38,7 +38,7 @@ default = "true"
 
 [Cockpit]
 name = "Cockpit"
-url = "https://localhost:9090/"
+url = "/dashboard/"
 scale = 1
 icon = "muximux-wrench"
 color = "#193f8a"

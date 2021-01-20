@@ -4,7 +4,7 @@
 # File Created: Wednesday, 20th January 2021 7:24:01 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 2:55:11 pm
+# Last Modified: Wednesday, 20th January 2021 7:46:01 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -13,6 +13,21 @@
 
 version: '2'
 services:
+
+  nginx:
+    image: linuxserver/nginx:latest
+    container_name: main-proxy
+    labels:
+      - "service=system"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIMEZONE}
+    volumes:
+      - /opt/diy-nas/system_appdata/main-proxy:/config
+    ports:
+      - 80:80
+    restart: always
 
   muximux:
     image: ghcr.io/linuxserver/muximux:a2b403f5-ls70 # Lock in this version (shouldn't need to ever update it...)
@@ -26,7 +41,7 @@ services:
     volumes:
       - /opt/diy-nas/system_appdata/landing-page:/config
     ports:
-      - 80:80
+      - 5002:80
     restart: always
 
   docker-compose-ui:

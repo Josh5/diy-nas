@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 3:56:36 pm
+# Last Modified: Wednesday, 20th January 2021 9:15:00 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -515,6 +515,13 @@ function install_cockpit {
     #          https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
     #  fi
     #  `dpkg -la | grep cockpit-docker &> /dev/null` || apt-get install -y /opt/cockpit/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+
+    _standalone_stage_header "Configure cockpit server for http access"
+    mkdir -p /etc/cockpit &>> ${SCRIPT_LOG_FILE}
+    echo "" > /etc/cockpit/cockpit.conf
+    echo "[WebService]" >> /etc/cockpit/cockpit.conf
+    echo "AllowUnencrypted=true" >> /etc/cockpit/cockpit.conf
+    echo "UrlRoot=/dashboard/" >> /etc/cockpit/cockpit.conf
 
     _stage_header "Restarting cockpit server"
     systemctl restart cockpit

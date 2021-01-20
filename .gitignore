@@ -1,6 +1,14 @@
 # Ignore all files in the config directory
 config/**
 
+# Main proxy
+system_appdata/main-proxy/*
+!system_appdata/main-proxy/nginx
+system_appdata/main-proxy/nginx/*
+!system_appdata/main-proxy/nginx/site-confs
+system_appdata/main-proxy/nginx/site-confs/*
+!system_appdata/main-proxy/nginx/site-confs/default
+
 # Landing page
 system_appdata/landing-page/**
 # Note, the settings.ini.php file has been force included due to the muximux project .gitignore file
