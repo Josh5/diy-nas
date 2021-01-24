@@ -5,13 +5,12 @@
 # File Created: Monday, 25th January 2021 12:12:44 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 12:36:40 am
+# Last Modified: Monday, 25th January 2021 1:06:51 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
 #TODO:
 #   - autostart unit on boot
-#   - fix cron script (no user)
 
 
 script_path="$(dirname $(readlink -e ${BASH_SOURCE[0]}))"

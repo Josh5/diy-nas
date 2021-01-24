@@ -4,9 +4,9 @@
 # File Created: Sunday, 24th January 2021 1:56:01 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 24th January 2021 1:58:33 pm
+# Last Modified: Monday, 25th January 2021 1:06:04 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
 
-*/5 * * * * . /etc/profile; /opt/scrutiny/bin/scrutiny-collector-metrics-linux-amd64 run --api-endpoint "http://localhost:5003"
+*/5 * * * * root /opt/scrutiny/bin/scrutiny-collector-metrics-linux-amd64 run --api-endpoint "http://localhost:5003"
