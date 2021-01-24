@@ -44,6 +44,14 @@ icon = "muximux-wrench"
 color = "#193f8a"
 enabled = "true"
 
+[Scrutiny]
+name = "Scrutiny"
+url = "http://localhost:5003/web/dashboard/"
+scale = 1
+icon = "muximux-drive"
+color = "#193f8a"
+enabled = "true"
+
 [docker-compose-ui]
 name = "Docker Compose UI"
 url = "http://localhost:5000/"

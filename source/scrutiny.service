@@ -1,0 +1,22 @@
+###
+# File: scrutiny.service
+# Project: source
+# File Created: Sunday, 24th January 2021 1:37:03 pm
+# Author: Josh.5 (jsunnex@gmail.com)
+# -----
+# Last Modified: Sunday, 24th January 2021 1:46:55 pm
+# Modified By: Josh.5 (jsunnex@gmail.com)
+###
+
+[Unit]
+Description=Scrutiny web server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/opt/scrutiny/bin/scrutiny-web-linux-amd64 start --config /opt/scrutiny/config/scrutiny.yaml
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

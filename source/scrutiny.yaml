@@ -1,0 +1,24 @@
+###
+# File: scrutiny.yaml
+# Project: source
+# File Created: Sunday, 24th January 2021 1:09:13 pm
+# Author: Josh.5 (jsunnex@gmail.com)
+# -----
+# Last Modified: Sunday, 24th January 2021 1:45:23 pm
+# Modified By: Josh.5 (jsunnex@gmail.com)
+###
+
+version: 1
+
+web:
+  listen:
+    port: 5003
+    host: 0.0.0.0
+  database:
+    # The Scrutiny webapp will create a database for you, however the parent directory must exist.
+    location: /opt/scrutiny/config/scrutiny.db
+  src:
+    frontend:
+      # The path to the Scrutiny frontend files (js, css, images) must be specified.
+      # We'll populate it with files in the next section
+      path: /opt/scrutiny/web

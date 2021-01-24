@@ -20,6 +20,36 @@ server {
         proxy_set_header    X-Frame-Options SAMEORIGIN;
     }
 
+    # Scrutiny Proxy
+    # location /web/dashboard/ {
+    #     proxy_pass          http://localhost:5003/web/dashboard/;
+    #     proxy_set_header    Host $host:$server_port;
+    #     proxy_set_header    Origin $scheme://$host:$server_port;    
+    #     proxy_set_header    Connection $http_connection;
+    #     proxy_set_header    Cookie $http_cookie;
+    #     proxy_set_header    Upgrade $http_upgrade;
+    #     proxy_set_header    X-Forwarded-Protocol $scheme;
+    #     proxy_set_header    X-Scheme $scheme;
+    #     proxy_set_header    X-Real-IP $remote_addr;
+    #     proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+    #     proxy_set_header    X-Forwarded-Ssl on;
+    #     proxy_set_header    X-Frame-Options SAMEORIGIN;
+    # }
+    location /web/dashboard/ {
+        proxy_pass          http://scrutiny:8080/web/dashboard/;
+        proxy_set_header    Host $host:$server_port;
+        proxy_set_header    Origin $scheme://$host:$server_port;    
+        proxy_set_header    Connection $http_connection;
+        proxy_set_header    Cookie $http_cookie;
+        proxy_set_header    Upgrade $http_upgrade;
+        proxy_set_header    X-Forwarded-Protocol $scheme;
+        proxy_set_header    X-Scheme $scheme;
+        proxy_set_header    X-Real-IP $remote_addr;
+        proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Ssl on;
+        proxy_set_header    X-Frame-Options SAMEORIGIN;
+    }
+
     # Cockpit Proxy
     location /dashboard/ {
         proxy_pass          http://hulk.local:9090/dashboard/;
