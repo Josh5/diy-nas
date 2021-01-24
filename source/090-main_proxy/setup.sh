@@ -5,7 +5,7 @@
 # File Created: Monday, 25th January 2021 2:32:59 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 2:40:39 am
+# Last Modified: Monday, 25th January 2021 2:46:53 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -27,6 +27,13 @@ function installing_main_proxy_config {
     ip_address=$(hostname -I | cut -d' ' -f1)
     sed -i "s|://localhost|://${ip_address}|" ${PROJECT_PATH}/system_appdata/main-proxy/nginx/site-confs/default &>> ${SCRIPT_LOG_FILE}
     _update_stage_header ${?}
+
+    if docker ps | grep main-proxy &> /dev/null; then
+        # The proxy is running, restart it...
+        _stage_header "Restarting the main proxy Docker container"
+        docker restart main-proxy &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
 }
 
 
