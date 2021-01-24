@@ -1,11 +1,11 @@
 #!/bin/bash
 ###
 # File: setup.sh
-# Project: 210-project_updater
+# Project: 210-project_controllers
 # File Created: Monday, 25th January 2021 12:15:52 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 12:47:30 am
+# Last Modified: Monday, 25th January 2021 2:29:05 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -28,7 +28,7 @@ function update_project_system_docker_stack {
     _header "Updating system Docker stack"
 
     # Bring down containers (removes issues with port conflicts between old version and new and forces refresh)
-    _stage_header "Bringing down system Docker images"
+    _stage_header "Bringing down system Docker containers"
     docker-compose -f ${PROJECT_PATH}/docker-compose.yml --env-file ${PROJECT_PATH}/config/config.env down &>> ${SCRIPT_LOG_FILE}
     _update_stage_header ${?}
 
@@ -38,7 +38,7 @@ function update_project_system_docker_stack {
     _update_stage_header ${?}
 
     # Bring up containers
-    _stage_header "Bringing up system Docker images"
+    _stage_header "Bringing up system Docker containers"
     docker-compose -f ${PROJECT_PATH}/docker-compose.yml --env-file ${PROJECT_PATH}/config/config.env up --remove-orphans -d &>> ${SCRIPT_LOG_FILE}
     _update_stage_header ${?}
 

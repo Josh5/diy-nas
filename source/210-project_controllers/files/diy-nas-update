@@ -1,0 +1,20 @@
+#!/bin/bash
+###
+# File: diy-nas-update
+# Project: source
+# File Created: Wednesday, 20th January 2021 9:00:06 am
+# Author: Josh.5 (jsunnex@gmail.com)
+# -----
+# Last Modified: Monday, 25th January 2021 2:25:20 am
+# Modified By: Josh.5 (jsunnex@gmail.com)
+###
+
+
+# Ensure we are run as root...
+if [[ $(id -u) -gt 0 ]]; then
+    echo "ERROR! This needs to be run as root... Exiting..."
+    exit 1
+fi
+
+
+wget -O - https://raw.githubusercontent.com/Josh5/diy-nas/master/install.sh | bash
