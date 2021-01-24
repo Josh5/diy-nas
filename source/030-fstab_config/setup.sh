@@ -5,7 +5,7 @@
 # File Created: Sunday, 24th January 2021 10:50:21 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 1:13:15 am
+# Last Modified: Monday, 25th January 2021 1:17:41 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -44,7 +44,7 @@ function install_fstab_config {
             _standalone_stage_header "Adding storage cache mount point"
             echo "# MergerFS Cache:" >> /etc/fstab
             cache_disk_part1_fs_type=$(blkid -o value -s TYPE /dev/disk/by-uuid/${CACHE_DISK_PART1_UUID})
-            echo "/dev/disk/by-uuid/${CACHE_DISK_PART1_UUID}    /storage/cache    ${cache_disk_part1_fs_type}    defaults 0 0" >> /etc/fstab
+            echo "UUID=${CACHE_DISK_PART1_UUID}    /storage/cache    ${cache_disk_part1_fs_type}    rw,user,exec,nosuid,nodev,noatime,nofail    0  0" >> /etc/fstab
             echo "" >> /etc/fstab
         else
             _standalone_stage_header "No storage cache mount configured...ignoring"
@@ -56,7 +56,7 @@ function install_fstab_config {
             _standalone_stage_header "Adding MergerFS cache mount point"
             echo "# MergerFS Cache:" >> /etc/fstab
             cache_disk_part2_fs_type=$(blkid -o value -s TYPE /dev/disk/by-uuid/${CACHE_DISK_PART2_UUID})
-            echo "/dev/disk/by-uuid/${CACHE_DISK_PART2_UUID}    /mnt/disks/cache    ${cache_disk_part2_fs_type}    defaults 0 0" >> /etc/fstab
+            echo "UUID=${CACHE_DISK_PART2_UUID}    /mnt/disks/cache    ${cache_disk_part2_fs_type}    rw,user,exec,nosuid,nodev,noatime,nofail    0  0" >> /etc/fstab
             echo "" >> /etc/fstab
         else
             _standalone_stage_header "No MergerFS cache mount configured...ignoring"
