@@ -5,7 +5,7 @@
 # File Created: Sunday, 24th January 2021 10:50:21 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 1:17:41 am
+# Last Modified: Monday, 25th January 2021 3:48:47 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -43,8 +43,21 @@ function install_fstab_config {
         if [[ ! -z ${CACHE_DISK_PART1_UUID} ]]; then
             _standalone_stage_header "Adding storage cache mount point"
             echo "# MergerFS Cache:" >> /etc/fstab
+
+            # Set the fs type
             cache_disk_part1_fs_type=$(blkid -o value -s TYPE /dev/disk/by-uuid/${CACHE_DISK_PART1_UUID})
-            echo "UUID=${CACHE_DISK_PART1_UUID}    /storage/cache    ${cache_disk_part1_fs_type}    rw,user,exec,nosuid,nodev,noatime,nofail    0  0" >> /etc/fstab
+            [[ -z ${cache_disk_part1_fs_type} ]] && cache_disk_part1_fs_type="auto"
+
+            # Build the mount options
+            cache_disk_part1_mount_opts="rw"
+            if [[ ${cache_disk_part1_fs_type} == "vfat" || ${cache_disk_part1_fs_type} == "ntfs" ]]; then
+                cache_disk_part1_mount_opts+=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
+            else
+                cache_disk_part1_mount_opts+=",user,exec,nosuid,nodev,noatime,nofail"
+            fi
+
+            # Write to file
+            echo "UUID=${CACHE_DISK_PART1_UUID}    /storage/cache    ${cache_disk_part1_fs_type}    ${cache_disk_part1_mount_opts}    0  0" >> /etc/fstab
             echo "" >> /etc/fstab
         else
             _standalone_stage_header "No storage cache mount configured...ignoring"
@@ -55,8 +68,21 @@ function install_fstab_config {
         if [[ ! -z ${CACHE_DISK_PART2_UUID} ]]; then
             _standalone_stage_header "Adding MergerFS cache mount point"
             echo "# MergerFS Cache:" >> /etc/fstab
+
+            # Set the fs type
             cache_disk_part2_fs_type=$(blkid -o value -s TYPE /dev/disk/by-uuid/${CACHE_DISK_PART2_UUID})
-            echo "UUID=${CACHE_DISK_PART2_UUID}    /mnt/disks/cache    ${cache_disk_part2_fs_type}    rw,user,exec,nosuid,nodev,noatime,nofail    0  0" >> /etc/fstab
+            [[ -z ${cache_disk_part2_fs_type} ]] && cache_disk_part2_fs_type="auto"
+
+            # Build the mount options
+            cache_disk_part2_mount_opts="rw"
+            if [[ ${cache_disk_part2_fs_type} == "vfat" || ${cache_disk_part2_fs_type} == "ntfs" ]]; then
+                cache_disk_part2_mount_opts+=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
+            else
+                cache_disk_part2_mount_opts+=",user,exec,nosuid,nodev,noatime,nofail"
+            fi
+
+            # Write to file
+            echo "UUID=${CACHE_DISK_PART2_UUID}    /mnt/disks/cache    ${cache_disk_part2_fs_type}    ${cache_disk_part2_mount_opts}    0  0" >> /etc/fstab
             echo "" >> /etc/fstab
         else
             _standalone_stage_header "No MergerFS cache mount configured...ignoring"
