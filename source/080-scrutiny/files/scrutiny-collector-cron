@@ -4,9 +4,10 @@
 # File Created: Sunday, 24th January 2021 1:56:01 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 1:06:04 am
+# Last Modified: Monday, 25th January 2021 3:25:47 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
+PATH=/usr/bin:/bin:/usr/sbin
 
-*/5 * * * * root /opt/scrutiny/bin/scrutiny-collector-metrics-linux-amd64 run --api-endpoint "http://localhost:5003"
+*/1 * * * * root /opt/scrutiny/bin/scrutiny-collector-metrics-linux-amd64 run --api-endpoint "http://localhost:5003" >> /tmp/diy-nas-scrutiny-collector-metrics.log 2>&1

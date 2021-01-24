@@ -5,12 +5,9 @@
 # File Created: Sunday, 24th January 2021 11:31:37 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 2:15:37 am
+# Last Modified: Monday, 25th January 2021 3:02:18 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
-#
-# TODO:
-#   - fix issue with restoring UUIDs
 
 
 script_path="$(dirname $(readlink -e ${BASH_SOURCE[0]}))"
