@@ -52,7 +52,7 @@ server {
 
     # Cockpit Proxy
     location /dashboard/ {
-        proxy_pass          http://hulk.local:9090/dashboard/;
+        proxy_pass          http://localhost:9090/dashboard/;
         proxy_set_header    Host $host:$server_port;
         proxy_set_header    Origin $scheme://$host:$server_port;    
         proxy_set_header    Connection $http_connection;
