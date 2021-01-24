@@ -5,7 +5,7 @@
 # File Created: Sunday, 24th January 2021 10:50:21 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 12:00:50 am
+# Last Modified: Monday, 25th January 2021 1:13:15 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -31,11 +31,11 @@ function install_fstab_config {
     _standalone_stage_header "Adding TMPFS mount points for disks and storage"
     echo "# TMPFS for mount points:" >> /etc/fstab
     # Create a mount for our merged storage
-    echo "tmpfs   /storage              tmpfs nosuid,nodev,noatime 0 0" >> /etc/fstab
+    echo "tmpfs   /storage              tmpfs    nosuid,nodev,noatime,mode=0777    0  0" >> /etc/fstab
     # Create a mount point for our disks
-    echo "tmpfs   /mnt/disks            tmpfs nosuid,nodev,noatime 0 0" >> /etc/fstab
+    echo "tmpfs   /mnt/disks            tmpfs    nosuid,nodev,noatime,mode=0777    0  0" >> /etc/fstab
     # Create an initial ramdisk mount of really low limited size for the initial mergerfs pool
-    echo "tmpfs   /mnt/disks/ramdisk    tmpfs nosuid,nodev,noatime,size=12k 0 0" >> /etc/fstab
+    echo "tmpfs   /mnt/disks/ramdisk    tmpfs    nosuid,nodev,noatime,size=12k     0  0" >> /etc/fstab
     echo "" >> /etc/fstab
 
     if [[ -e ${PROJECT_PATH}/config/config.env ]]; then
