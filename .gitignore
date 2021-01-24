@@ -4,12 +4,7 @@ config/**
 source/*/*.md5
 
 # Main proxy
-system_appdata/main-proxy/*
-!system_appdata/main-proxy/nginx
-system_appdata/main-proxy/nginx/*
-!system_appdata/main-proxy/nginx/site-confs
-system_appdata/main-proxy/nginx/site-confs/*
-!system_appdata/main-proxy/nginx/site-confs/default
+system_appdata/main-proxy/**
 
 # Landing page
 system_appdata/landing-page/**

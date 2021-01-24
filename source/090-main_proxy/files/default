@@ -4,9 +4,9 @@ server {
 
 	server_name _;
 
-    # Main page
-    location / {
-        proxy_pass          http://muximux:80/;
+    # Scrutiny Proxies
+    location /web/ {
+        proxy_pass          http://localhost:5003/web/;
         proxy_set_header    Host $host:$server_port;
         proxy_set_header    Origin $scheme://$host:$server_port;    
         proxy_set_header    Connection $http_connection;
@@ -19,24 +19,8 @@ server {
         proxy_set_header    X-Forwarded-Ssl on;
         proxy_set_header    X-Frame-Options SAMEORIGIN;
     }
-
-    # Scrutiny Proxy
-    # location /web/dashboard/ {
-    #     proxy_pass          http://localhost:5003/web/dashboard/;
-    #     proxy_set_header    Host $host:$server_port;
-    #     proxy_set_header    Origin $scheme://$host:$server_port;    
-    #     proxy_set_header    Connection $http_connection;
-    #     proxy_set_header    Cookie $http_cookie;
-    #     proxy_set_header    Upgrade $http_upgrade;
-    #     proxy_set_header    X-Forwarded-Protocol $scheme;
-    #     proxy_set_header    X-Scheme $scheme;
-    #     proxy_set_header    X-Real-IP $remote_addr;
-    #     proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
-    #     proxy_set_header    X-Forwarded-Ssl on;
-    #     proxy_set_header    X-Frame-Options SAMEORIGIN;
-    # }
-    location /web/dashboard/ {
-        proxy_pass          http://scrutiny:8080/web/dashboard/;
+    location /api/ {
+        proxy_pass          http://localhost:5003/api/;
         proxy_set_header    Host $host:$server_port;
         proxy_set_header    Origin $scheme://$host:$server_port;    
         proxy_set_header    Connection $http_connection;
@@ -53,6 +37,22 @@ server {
     # Cockpit Proxy
     location /dashboard/ {
         proxy_pass          http://localhost:9090/dashboard/;
+        proxy_set_header    Host $host:$server_port;
+        proxy_set_header    Origin $scheme://$host:$server_port;    
+        proxy_set_header    Connection $http_connection;
+        proxy_set_header    Cookie $http_cookie;
+        proxy_set_header    Upgrade $http_upgrade;
+        proxy_set_header    X-Forwarded-Protocol $scheme;
+        proxy_set_header    X-Scheme $scheme;
+        proxy_set_header    X-Real-IP $remote_addr;
+        proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Ssl on;
+        proxy_set_header    X-Frame-Options SAMEORIGIN;
+    }
+
+    # Main page
+    location / {
+        proxy_pass          http://muximux:80/;
         proxy_set_header    Host $host:$server_port;
         proxy_set_header    Origin $scheme://$host:$server_port;    
         proxy_set_header    Connection $http_connection;

@@ -46,7 +46,7 @@ enabled = "true"
 
 [Scrutiny]
 name = "Scrutiny"
-url = "http://localhost:5003/web/dashboard/"
+url = "/web/dashboard/"
 scale = 1
 icon = "muximux-drive"
 color = "#193f8a"
