@@ -5,12 +5,9 @@
 # File Created: Monday, 25th January 2021 12:40:35 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 12:43:01 am
+# Last Modified: Monday, 25th January 2021 1:11:22 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
-#
-#TODO:
-#   - Change short hostname to IP address (compatibility with devices not able to reach by hostname)
 
 
 script_path="$(dirname $(readlink -e ${BASH_SOURCE[0]}))"
@@ -60,8 +57,8 @@ function patching_muximux_for_landing_page {
             _update_stage_header ${?}
 
             _stage_header "Updating muximux settings with hostname"
-            short_hostname=$(hostname -s)
-            sed -i "s|://localhost|://${short_hostname,,}.local|" ${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php &>> ${SCRIPT_LOG_FILE}
+            ip_address=$(hostname -I | cut -d' ' -f1)
+            sed -i "s|://localhost|://${ip_address}|" ${PROJECT_PATH}/system_appdata/landing-page/www/muximux/settings.ini.php &>> ${SCRIPT_LOG_FILE}
             _update_stage_header ${?}
         else
             found_file=1
