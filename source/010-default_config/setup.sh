@@ -5,7 +5,7 @@
 # File Created: Sunday, 24th January 2021 11:31:37 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 24th January 2021 11:56:03 pm
+# Last Modified: Monday, 25th January 2021 2:15:37 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -16,6 +16,42 @@
 script_path="$(dirname $(readlink -e ${BASH_SOURCE[0]}))"
 source "${script_path}/../install.env"
 
+
+_config_vars=(
+    "TIMEZONE"
+    "CACHE_DISK_PART1_UUID"
+    "CACHE_DISK_PART2_UUID"
+)
+_config_arrays=(
+    "DISK_UUID_BLACKLIST"
+)
+
+function _add_config_variable {
+    _variable="${@}"
+    if `grep -q "^${_variable}=" ${PROJECT_PATH}/config/config.env`; then
+        _stage_header "Resetting user setting '${_variable}=${!_variable}'"
+        sed -i "s|^${var}=.*$|${var}=${!var}|" ${PROJECT_PATH}/config/config.env &>> ${SCRIPT_LOG_FILE}
+        echo "${_variable}=${!_variable}" &> /dev/null
+        _update_stage_header ${?}
+        echo "${_variable[1]}"
+    fi
+}
+
+function _add_config_array {
+    _array=$@[@]
+    if `grep -q "^${@}=" ${PROJECT_PATH}/config/config.env`; then
+
+        _string="${@}=( \n"
+        for value in "${!_array}"; do 
+            _string="${_string}    \"${value}\"\n"
+        done
+        _string="${_string})\n"
+
+        _stage_header "Resetting user setting array '${@}'"
+        sed -i "s|^${@}=.*$|${_string}|" ${PROJECT_PATH}/config/config.env &>> ${SCRIPT_LOG_FILE}
+        _update_stage_header ${?}
+    fi
+}
 
 function install_default_config {
     # Install default config file if does not exist
@@ -33,14 +69,20 @@ function install_default_config {
         _header "Updating user config"
         # Source the current user config
         source ${PROJECT_PATH}/config/config.env
+        
         # Copy default config replacing current user config
-        # Update variables in the user config with what was source above
-        for var in $(compgen -v); do
-            if `grep -q "${var}=" ${PROJECT_PATH}/config/config.env`; then
-                _stage_header "Resetting user setting '${var}=${!var}'"
-                sed -i "s|${var}=.*$|${var}=${!var}|" ${PROJECT_PATH}/config/config.env &>> ${SCRIPT_LOG_FILE}
-                _update_stage_header ${?}
-            fi
+        _stage_header "Copy default config.env file"
+        cp ${script_path}/files/config.env ${PROJECT_PATH}/config/config.env
+        _update_stage_header ${?}
+
+        # Update variables in the user config with what was sourced above
+        for var in ${_config_vars[@]}; do
+            _add_config_variable "${var}"
+        done
+
+        # Update config arrays in the user config with what was sourced above
+        for var in ${_config_arrays[@]}; do
+            _add_config_array "${var}"
         done
     fi
     chmod a+rw ${PROJECT_PATH}/config/config.env
