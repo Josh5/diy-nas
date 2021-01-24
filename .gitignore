@@ -1,6 +1,8 @@
 # Ignore all files in the config directory
 config/**
 
+source/*/*.md5
+
 # Main proxy
 system_appdata/main-proxy/*
 !system_appdata/main-proxy/nginx
