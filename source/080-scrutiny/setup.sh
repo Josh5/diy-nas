@@ -5,12 +5,9 @@
 # File Created: Monday, 25th January 2021 12:12:44 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 1:06:51 am
+# Last Modified: Monday, 25th January 2021 1:07:47 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
-#
-#TODO:
-#   - autostart unit on boot
 
 
 script_path="$(dirname $(readlink -e ${BASH_SOURCE[0]}))"
@@ -91,6 +88,10 @@ function install_scrutiny {
     _update_stage_header ${?}
     _stage_header "Reloading systemd units"
     systemctl daemon-reload &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
+    _stage_header "Enable Scrutiny Web Server on boot"
+    systemctl enable scrutiny.service &>> ${SCRIPT_LOG_FILE}
     _update_stage_header ${?}
 
     _stage_header "Restarting Scrutiny Web Server"
