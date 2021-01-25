@@ -1,7 +1,10 @@
 # Ignore all files in the config directory
 config/**
 
+# Ignore the source checksum files
 source/*/*.md5
+
+# Ignore the main docker-compose file
 
 # Main proxy
 system_appdata/main-proxy/**
@@ -10,4 +13,3 @@ system_appdata/main-proxy/**
 system_appdata/landing-page/**
 # Note, the settings.ini.php file has been force included due to the muximux project .gitignore file
 
-# Do not ignore these files:
