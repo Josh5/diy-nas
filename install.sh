@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 1:03:12 am
+# Last Modified: Monday, 25th January 2021 3:37:12 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -13,11 +13,17 @@
 #
 ###
 
+
+PROJECT_PATH="/opt/diy-nas"
+PROJECT_INSTALL_ENV_FILE="${PROJECT_PATH}/source/install.env"
+
+
 # Ensure we are run as root...
 if [[ $(id -u) -gt 0 ]]; then
     echo "ERROR! This needs to be run as root... Exiting..."
     exit 1
 fi
+
 
 # Ensure script deps are installed...
 `command -v git &> /dev/null` || apt_deps_install_list="${apt_mergerfs_install_list} git"
@@ -31,10 +37,6 @@ if [[ ! -z ${apt_deps_install_list} ]]; then
     echo "Exit!"
     exit 1
 fi
-
-
-PROJECT_PATH="/opt/diy-nas"
-source ${PROJECT_PATH}/source/install.env
 
 
 #  _   _                _           
@@ -79,6 +81,10 @@ if [[ ! -L ${PROJECT_PATH} ]]; then
 
     popd
 fi
+
+
+# Source the environment variables from the project install env file
+source ${PROJECT_INSTALL_ENV_FILE}
 
 
 # Update log file
