@@ -5,6 +5,7 @@ config/**
 source/*/*.md5
 
 # Ignore the main docker-compose file
+docker-compose.yml
 
 # Main proxy
 system_appdata/main-proxy/**
