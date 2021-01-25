@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:26:12 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 20th January 2021 9:33:29 pm
+# Last Modified: Monday, 25th January 2021 4:28:06 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -84,7 +84,17 @@ do_mount()
     if ! `/usr/bin/grep "${STORAGE_POOL_PATH}" /proc/mounts &> /dev/null` ; then
         echo "Could not find mergerfs mount.. Lets create it!"
         mkdir -p ${STORAGE_POOL_PATH}
-        mergerfs -o defaults,allow_other,direct_io,use_ino,minfreespace=1G,fsname=mergerfs '/mnt/disks/*' ${STORAGE_POOL_PATH}
+
+        # Build MergerFS /storage/pool mount args
+        storage_pool_mount_options="defaults,allow_other,direct_io,use_ino,minfreespace=1G,fsname=mergerfs"
+        # Specify the create policy as mspmfs - most free space
+        storage_pool_mount_options="${storage_pool_mount_options},category.create=mfs"
+        # # [TODO] Specify the policy for ENOSPC (no space left on device) or EDQUOT (disk quota exceeded) as mfs - most free space
+        # storage_pool_mount_options="${storage_pool_mount_options},moveonenospc=true"
+        # Specify the policy for file caching as partial - Enables page caching. Underlying files cached, mergerfs files cached while open.
+        storage_pool_mount_options="${storage_pool_mount_options},cache.files=partial,dropcacheonclose=true"
+
+        mergerfs -o ${storage_pool_mount_options} '/mnt/disks/*' ${STORAGE_POOL_PATH}
     fi
     xattr -w user.mergerfs.srcmounts "+>${MOUNT_POINT}" ${STORAGE_POOL_PATH}/.mergerfs
 }
