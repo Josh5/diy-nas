@@ -5,7 +5,7 @@
 # File Created: Wednesday, 20th January 2021 7:15:06 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 3:37:12 pm
+# Last Modified: Monday, 25th January 2021 3:39:41 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 # 
 # usage:
@@ -16,6 +16,7 @@
 
 PROJECT_PATH="/opt/diy-nas"
 PROJECT_INSTALL_ENV_FILE="${PROJECT_PATH}/source/install.env"
+[[ -e ${PROJECT_INSTALL_ENV_FILE} ]] && source ${PROJECT_INSTALL_ENV_FILE}
 
 
 # Ensure we are run as root...
@@ -64,7 +65,7 @@ if [[ ! -L ${PROJECT_PATH} ]]; then
     # TODO: Dont make this RW by everyone...
     chmod a+rw ${PROJECT_PATH}
 
-    pushd ${PROJECT_PATH}
+    pushd ${PROJECT_PATH} &> /dev/null
 
     # Initi the git repo (if required)
     [[ -e ${PROJECT_PATH}/.git/config ]] || git init
@@ -79,7 +80,8 @@ if [[ ! -L ${PROJECT_PATH} ]]; then
     git checkout master
     git pull
 
-    popd
+    popd &> /dev/null
+    echo
 fi
 
 
