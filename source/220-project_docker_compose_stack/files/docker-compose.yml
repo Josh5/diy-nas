@@ -4,7 +4,7 @@
 # File Created: Wednesday, 20th January 2021 7:24:01 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 24th January 2021 2:46:58 pm
+# Last Modified: Monday, 25th January 2021 5:00:04 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -73,15 +73,6 @@ services:
       - 443:443
     restart: always
 
-  # scrutiny:
-  #   image: analogj/scrutiny:web
-  #   container_name: scrutiny
-  #   labels:
-  #     - "service=system"
-  #   ports:
-  #     - 5003:8080
-  #   restart: always
-
   portainer:
     image: portainer/portainer-ce
     container_name: portainer
@@ -110,4 +101,53 @@ services:
       - /opt/diy-nas/config/docker-compose-files:/docker-compose-files
     environment:
       - COMPOSE_DIR=/docker-compose-files/
+    restart: always
+
+  diskover:
+    image: linuxserver/diskover
+    container_name: diskover
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIMEZONE}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ES_HOST=elasticsearch
+      - ES_PORT=9200
+      - ES_USER=elastic
+      - ES_PASS=changeme
+      - RUN_ON_START=true     # TODO: Don't run on start - lightweight systems wont like this
+      - USE_CRON=true
+    volumes:
+      - /opt/diy-nas/system_appdata/diskover:/config
+      - /storage:/data
+    ports:
+      - 5004:80
+      - 9181:9181
+      - 9999:9999
+    mem_limit: 4096m
+    restart: always
+    depends_on:
+      - elasticsearch
+      - redis
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    volumes:
+      - /opt/diy-nas/system_appdata/elasticsearch/data:/usr/share/elasticsearch/data
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    volumes:
+      - /opt/diy-nas/system_appdata/redis:/data
     restart: always

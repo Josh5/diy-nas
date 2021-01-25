@@ -5,7 +5,7 @@
 # File Created: Monday, 25th January 2021 3:49:00 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 4:01:43 pm
+# Last Modified: Monday, 25th January 2021 4:55:20 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -28,6 +28,59 @@ function _compare_compose_files {
     fi
 
     return 0
+}
+
+function configure_system_max_map_count {
+    # Update default docker-compose services
+    _header "Updating system VM max_map_count"
+
+    _stage_header "Set the current session to '262144'"
+    sysctl -w vm.max_map_count=262144 &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
+    _stage_header "Add this config to /etc/sysctl.conf for all subsequent boots"
+    if ! grep -q "^vm.max_map_count=" /etc/sysctl.conf; then
+        echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+        echo "" >> /etc/sysctl.conf
+    fi
+    sed -i "s|^vm.max_map_count=.*$|vm.max_map_count=262144|" /etc/sysctl.conf &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
+    echo
+}
+
+function configure_system_overcommit_memory {
+    # Update default docker-compose services
+    _header "Updating system VM overcommit_memory"
+
+    _stage_header "Set the current session to true"
+    sysctl -w vm.overcommit_memory=1 &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
+    _stage_header "Add this config to /etc/sysctl.conf for all subsequent boots"
+    if ! grep -q "^vm.overcommit_memory=" /etc/sysctl.conf; then
+        echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
+        echo "" >> /etc/sysctl.conf
+    fi
+    sed -i "s|^vm.overcommit_memory=.*$|vm.overcommit_memory=1|" /etc/sysctl.conf &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
+    echo
+}
+
+function create_required_directory_structure {
+    # Update default docker-compose services
+    _header "Creating required directory strucuture for system Docker stack"
+
+    _stage_header "Create elasticsearch directory"
+    mkdir -p ${PROJECT_PATH}/system_appdata/elasticsearch/data &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
+    _stage_header "Set correct ownership of elasticsearch directory"
+    chown -R 1000:1000 ./system_appdata/elasticsearch &>> ${SCRIPT_LOG_FILE}
+    _update_stage_header ${?}
+
+    echo
 }
 
 function update_project_system_docker_stack {
@@ -65,4 +118,7 @@ function update_project_system_docker_stack {
 }
 
 
+configure_system_max_map_count
+configure_system_overcommit_memory
+create_required_directory_structure
 update_project_system_docker_stack

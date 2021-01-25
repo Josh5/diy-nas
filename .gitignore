@@ -7,10 +7,15 @@ source/*/*.md5
 # Ignore the main docker-compose file
 docker-compose.yml
 
-# Main proxy
+# Ignore Main proxy config
 system_appdata/main-proxy/**
 
-# Landing page
+# Ignore Landing page config
 system_appdata/landing-page/**
 # Note, the settings.ini.php file has been force included due to the muximux project .gitignore file
+
+# Ignore Diskover config
+system_appdata/diskover/**
+system_appdata/elasticsearch/**
+system_appdata/redis/**
 
