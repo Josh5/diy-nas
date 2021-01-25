@@ -5,7 +5,7 @@
 # File Created: Monday, 25th January 2021 3:49:00 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 4:55:20 pm
+# Last Modified: Monday, 25th January 2021 5:03:14 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -77,7 +77,7 @@ function create_required_directory_structure {
     _update_stage_header ${?}
 
     _stage_header "Set correct ownership of elasticsearch directory"
-    chown -R 1000:1000 ./system_appdata/elasticsearch &>> ${SCRIPT_LOG_FILE}
+    chown -R 1000:1000 ${PROJECT_PATH}/system_appdata/elasticsearch &>> ${SCRIPT_LOG_FILE}
     _update_stage_header ${?}
 
     echo
