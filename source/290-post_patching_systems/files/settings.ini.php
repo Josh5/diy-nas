@@ -52,6 +52,14 @@ icon = "muximux-drive"
 color = "#193f8a"
 enabled = "true"
 
+[Diskover]
+name = "Diskover"
+url = "http://localhost:5004/"
+scale = 1
+icon = "muximux-database"
+color = "#193f8a"
+enabled = "true"
+
 [docker-compose-ui]
 name = "Docker Compose UI"
 url = "http://localhost:5000/"

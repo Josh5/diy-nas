@@ -4,7 +4,7 @@
 # File Created: Wednesday, 20th January 2021 7:24:01 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 25th January 2021 5:00:04 pm
+# Last Modified: Tuesday, 26th January 2021 7:10:18 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -116,7 +116,7 @@ services:
       - ES_PORT=9200
       - ES_USER=elastic
       - ES_PASS=changeme
-      - RUN_ON_START=true     # TODO: Don't run on start - lightweight systems wont like this
+      # - RUN_ON_START=true     # TODO: Don't run on start - lightweight systems wont like this
       - USE_CRON=true
     volumes:
       - /opt/diy-nas/system_appdata/diskover:/config
